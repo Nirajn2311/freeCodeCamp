@@ -19,11 +19,11 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     const staticPaths = await getStaticPaths({});
     const idStaticPaths = await getIdStaticPaths({});
     console.log(staticPaths.paths);
-    await res.unstable_revalidate(staticPaths.paths[0] as string);
+    await res.revalidate(staticPaths.paths[0] as string);
     for (const path of idStaticPaths.paths) {
       const params = (path as { params: ParsedUrlQuery })?.params;
       const pathSegments = idToPathSegmentsMap[params?.id as string];
-      await res.unstable_revalidate(getDestination(pathSegments));
+      await res.revalidate(getDestination(pathSegments));
     }
     console.log(idStaticPaths.paths.length);
     return res.json({ revalidated: true });
